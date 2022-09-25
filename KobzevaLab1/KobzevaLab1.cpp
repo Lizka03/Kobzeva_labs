@@ -19,6 +19,18 @@ Pipe NewPipe() {
     cin >> newP.Status;
     return newP;
 }
+CS NewCs() {
+    CS newCs;
+    cout << "\nEnter the name of CS\n";
+    cin >> newCs.Name;
+    cout << "\nEnter the number of workshops\n";
+    cin >> newCs.Workshop;
+    cout << "\nEnter the number of workshops\n";
+    cin >> newCs.WorkingWorkshop;
+    cout << "\n Enter CS efficiency\n";
+    cin >> newCs.Efficiency;
+    return newCs;
+}
 int main() { 
     CS cs;
     Pipe p;
@@ -32,7 +44,7 @@ int main() {
             p = NewPipe();
             break;
         case 2:
-
+            cs = NewCs();
             break;
         case 3:
 
