@@ -2,7 +2,7 @@
 using namespace std;
 struct Pipe {
     float Lenght = 0, Diameter = 0;
-    int Status = -1;
+    int Status = 0;
 };
 struct CS {
     string Name = "";
@@ -47,6 +47,24 @@ void ShowCs(const CS cs) {
         cout << "\n The CS has not been added\n";
     }
 }
+void EditPipe(Pipe & p) {
+    if (p.Status != 0) {
+        cout << "\nEnter 1 if the pipe is working /n Enter 2 if the pipe is being repaired:\n";
+        cin >> p.Status;
+    }
+    else {
+        cout << "\n The pipe has not been added\n";
+    }
+}
+void EditCs(CS& cs) {
+    if (cs.WorkingWorkshop != -1) {
+        cout << "\nEnter the number of working workshops\n";
+        cin >> cs.WorkingWorkshop;
+    }
+    else {
+        cout << "\n The CS has not been added\n";
+    }
+}
 int main() { 
     CS cs;
     Pipe p;
@@ -67,10 +85,10 @@ int main() {
             ShowCs(cs);
             break;
         case 4:
-
+            EditPipe(p);
             break;
         case 5:
-
+            EditCs(cs);
             break;
         case 6:
 
