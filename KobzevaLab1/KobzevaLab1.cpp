@@ -69,7 +69,7 @@ CS NewCs() {
     return newCs;
 }
 void ShowPipe(const Pipe p) {
-    if (p.Lenght != 0 && p.Diameter != 0 && p.Status != -1) {
+    if (p.Lenght != 0 ) {
         cout << "\n Pipe\n" << " Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter;
         if (p.Status == 1)
             cout << "\n Status:  Pipe is working\n";
@@ -81,7 +81,7 @@ void ShowPipe(const Pipe p) {
     }
 }
 void ShowCs(const CS cs) {
-    if (cs.Name != "" && cs.Workshop != 0 && cs.WorkingWorkshop != -1 && cs.Efficiency != 0) {
+    if (cs.WorkingWorkshop != -1) {
         cout << "\n CS\n" << " Name:  " << cs.Name << "\n Number of workshops:  " << cs.Workshop << "\n Number of working workshops:  " << cs.WorkingWorkshop << "\n Efficiency:  " << cs.Efficiency;
     }
     else {
@@ -108,13 +108,45 @@ void EditCs(CS& cs) {
 void SaveData(const Pipe p, const CS cs) {
     ofstream fout;
     fout.open("data.txt", 'w');
+    if (p.Lenght == 0) {
+        fout << 0 <<endl;
+    }
+    else {
+        fout << 1 << endl << p.Lenght << endl << p.Diameter << endl << p.Status << endl;
+    }
+    if (cs.WorkingWorkshop != -1) {
+        fout << 1 << endl << cs.Name << endl << cs.Workshop << endl <<cs.WorkingWorkshop << endl << cs.Efficiency << endl;
+    }
+    else {
+        fout << 0 << endl;
+    }
+
+}
+void LoadData( Pipe & p, CS &cs) {
+    ifstream fin;
+    int havepipe;
+    int havecs;
+    fin.open("data.txt", 'r');
+    fin >> havepipe;
+    if ((havepipe) == 1) {
+        fin >> p.Lenght;
+        fin >> p.Diameter;
+        fin >> p.Status;
+    }
+    fin >> havecs;
+    if ((havecs) == 1) {
+        fin >> cs.Name;
+        fin >> cs.Workshop;
+        fin >> cs.WorkingWorkshop;
+        fin >> cs.Efficiency;
+    }
+
 }
 
 int main() { 
     CS cs;
     Pipe p;
     int choice = -1;
-
     while (choice) {
         cout << "\n    Menu\n 1. Add pipe\n 2. Add CS\n 3. View all objects\n 4. Edit pipe\n 5. Edit CS\n 6. Save\n 7. Load\n 0. Exit\n";
         TryInputInt(choice);
@@ -138,9 +170,10 @@ int main() {
             EditCs(cs);
             break;
         case 6:
-
+            SaveData(p, cs);
             break;
         case 7:
+            LoadData(p, cs);
             break;
         default:
             cout << "\nError. Try again\n";
