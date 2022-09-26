@@ -1,4 +1,6 @@
 ﻿#include <iostream>
+#include <fstream>
+
 using namespace std;
 struct Pipe {
     float Lenght = 0, Diameter = 0;
@@ -9,31 +11,70 @@ struct CS {
     int  Workshop = 0, WorkingWorkshop = -1;
     float Efficiency = 0;
 };
+int TryInputInt(int& input) {
+    while (!((cin >> input).good()) || (input < 0)) {
+        cout << "\nError. Try again\n";
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+    }
+    return input;
+}
+
+float TryInputFloat(float& input) {
+    while (!((cin >> input).good()) || (input <= 0)) {
+        cout << "\nError. Try again\n";
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+    }
+    return input;
+}
+int TryInputStatus(int &status) {
+    do {
+        TryInputInt(status);
+        if (status == 1) {
+            cout << "Pipe is working";
+        }
+        else if (status == 2) {
+            cout << "Pipe is being repaired";
+        }
+        else {
+            cout << "\nError. Try again\n";
+        }
+    } while ((status < 1) || (status > 2));
+    return status;
+}
 Pipe NewPipe() {
     Pipe newP;
     cout << "\nEnter pipe length:\n";
-    cin >> newP.Lenght;
+    TryInputFloat(newP.Lenght);
     cout << "\nEnter pipe diameter:\n";
-    cin >> newP.Diameter;
-    cout << "\nEnter 1 if the pipe is working /n Enter 2 if the pipe is being repaired:\n";
-    cin >> newP.Status;
+    TryInputFloat(newP.Diameter);
+    cout << "\nEnter 1 if the pipe is working \n Enter 2 if the pipe is being repaired:\n";
+    TryInputStatus(newP.Status);
     return newP;
 }
+
 CS NewCs() {
     CS newCs;
     cout << "\nEnter the name of CS\n";
     cin >> newCs.Name;
     cout << "\nEnter the number of workshops\n";
-    cin >> newCs.Workshop;
+    TryInputInt(newCs.Workshop);
     cout << "\nEnter the number of working workshops\n";
-    cin >> newCs.WorkingWorkshop;
+    while (TryInputInt(newCs.WorkingWorkshop) > newCs.Workshop) {
+        cout << "\nError. Try again\n";
+    }
     cout << "\n Enter CS efficiency\n";
-    cin >> newCs.Efficiency;
+    TryInputFloat(newCs.Efficiency);
     return newCs;
 }
 void ShowPipe(const Pipe p) {
     if (p.Lenght != 0 && p.Diameter != 0 && p.Status != -1) {
-        cout << "\n Pipe\n" << " Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter << "\n Status:  " << p.Status;
+        cout << "\n Pipe\n" << " Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter;
+        if (p.Status == 1)
+            cout << "\n Status:  Pipe is working\n";
+        else
+            cout << "\n Status: Pipe being repaired\n";
     }
     else {
         cout << "\n The pipe has not been added\n";
@@ -49,8 +90,7 @@ void ShowCs(const CS cs) {
 }
 void EditPipe(Pipe & p) {
     if (p.Status != 0) {
-        cout << "\nEnter 1 if the pipe is working /n Enter 2 if the pipe is being repaired:\n";
-        cin >> p.Status;
+        TryInputStatus(p.Status);
     }
     else {
         cout << "\n The pipe has not been added\n";
@@ -65,6 +105,11 @@ void EditCs(CS& cs) {
         cout << "\n The CS has not been added\n";
     }
 }
+void SaveData(const Pipe p, const CS cs) {
+    ofstream fout;
+    fout.open("data.txt", 'w');
+}
+
 int main() { 
     CS cs;
     Pipe p;
@@ -72,8 +117,10 @@ int main() {
 
     while (choice) {
         cout << "\n    Menu\n 1. Add pipe\n 2. Add CS\n 3. View all objects\n 4. Edit pipe\n 5. Edit CS\n 6. Save\n 7. Load\n 0. Exit\n";
-        cin >> choice;
+        TryInputInt(choice);
         switch (choice) {
+        case 0:
+            break;
         case 1:
             p = NewPipe();
             break;
@@ -94,8 +141,9 @@ int main() {
 
             break;
         case 7:
-
             break;
+        default:
+            cout << "\nError. Try again\n";
         }
     }
 }
