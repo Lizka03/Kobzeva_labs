@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 struct Pipe {
@@ -12,7 +13,7 @@ struct CS {
     float Efficiency = 0;
 };
 int TryInputInt(int& input) {
-    while (!((cin >> input).good()) || (input < 0)) {
+    while (!((cin >> input).good()) || (input < 0) ) {
         cout << "\nError. Try again\n";
         cin.clear();
         cin.ignore(INT_MAX, '\n');
@@ -51,6 +52,7 @@ Pipe NewPipe() {
     TryInputFloat(newP.Diameter);
     cout << "\nEnter 1 if the pipe is working \n Enter 2 if the pipe is being repaired:\n";
     TryInputStatus(newP.Status);
+    cout << "\nPipe added\n";
     return newP;
 }
 
@@ -66,6 +68,7 @@ CS NewCs() {
     }
     cout << "\n Enter CS efficiency\n";
     TryInputFloat(newCs.Efficiency);
+    cout << "\nCs added\n";
     return newCs;
 }
 void ShowPipe(const Pipe p) {
@@ -89,8 +92,10 @@ void ShowCs(const CS cs) {
     }
 }
 void EditPipe(Pipe & p) {
+    cout << "\nEnter 1 if the pipe is working \n Enter 2 if the pipe is being repaired:\n";
     if (p.Status != 0) {
         TryInputStatus(p.Status);
+        cout << "\nPipe edited\n";
     }
     else {
         cout << "\n The pipe has not been added\n";
@@ -99,48 +104,36 @@ void EditPipe(Pipe & p) {
 void EditCs(CS& cs) {
     if (cs.WorkingWorkshop != -1) {
         cout << "\nEnter the number of working workshops\n";
-        cin >> cs.WorkingWorkshop;
+        while (TryInputInt(cs.WorkingWorkshop) > cs.Workshop) {
+            cout << "\nError. Try again\n";
+        }
+
     }
     else {
         cout << "\n The CS has not been added\n";
     }
 }
-void SaveData(const Pipe p, const CS cs) {
+void SaveData(Pipe& p, CS& cs) {
     ofstream fout;
     fout.open("data.txt", 'w');
-    if (p.Lenght == 0) {
-        fout << 0 <<endl;
-    }
-    else {
-        fout << 1 << endl << p.Lenght << endl << p.Diameter << endl << p.Status << endl;
-    }
-    if (cs.WorkingWorkshop != -1) {
-        fout << 1 << endl << cs.Name << endl << cs.Workshop << endl <<cs.WorkingWorkshop << endl << cs.Efficiency << endl;
-    }
-    else {
-        fout << 0 << endl;
-    }
+    fout  << p.Lenght << endl << p.Diameter << endl << p.Status << endl;
+    fout  << cs.Name << endl << cs.Workshop << endl <<cs.WorkingWorkshop << endl << cs.Efficiency << endl;
+    fout.close();
 
 }
-void LoadData( Pipe & p, CS &cs) {
+void LoadData(Pipe& p, CS& cs) {
     ifstream fin;
-    int havepipe;
-    int havecs;
-    fin.open("data.txt", 'r');
-    fin >> havepipe;
-    if ((havepipe) == 1) {
-        fin >> p.Lenght;
-        fin >> p.Diameter;
-        fin >> p.Status;
-    }
-    fin >> havecs;
-    if ((havecs) == 1) {
-        fin >> cs.Name;
-        fin >> cs.Workshop;
-        fin >> cs.WorkingWorkshop;
-        fin >> cs.Efficiency;
-    }
-
+    string line;
+    fin.open("data.txt");
+    fin >> p.Lenght;
+    fin >> p.Diameter;
+    fin >> p.Status;
+    getline(fin, line);
+    cs.Name = line;
+    fin >> cs.Workshop;
+    fin >> cs.WorkingWorkshop;
+    fin >> cs.Efficiency;
+    fin.close();
 }
 
 int main() { 
