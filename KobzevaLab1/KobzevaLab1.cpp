@@ -12,24 +12,22 @@ struct CS {
     int  Workshop = 0, WorkingWorkshop = -1;
     float Efficiency = 0;
 };
-int TryInputInt(int& input) {
+void TryInputInt(int &input) {
     while (!((cin >> input).good()) || (input < 0) ) {
         cout << "\nError. Try again\n";
         cin.clear();
         cin.ignore(INT_MAX, '\n');
     }
-    return input;
 }
 
-float TryInputFloat(float& input) {
+void TryInputFloat(float &input) {
     while (!((cin >> input).good()) || (input <= 0)) {
         cout << "\nError. Try again\n";
         cin.clear();
         cin.ignore(INT_MAX, '\n');
     }
-    return input;
 }
-int TryInputStatus(int &status) {
+void TryInputStatus(int& status) {
     do {
         TryInputInt(status);
         if (status == 1) {
@@ -42,7 +40,12 @@ int TryInputStatus(int &status) {
             cout << "\nError. Try again\n";
         }
     } while ((status < 1) || (status > 2));
-    return status;
+}
+
+void CheckMinMax(int max, int & x) {
+    while ((!((cin >> x).good()) || (x < 0)) || x > max) {
+        cout << "\nError. Try again\n";
+    }
 }
 Pipe NewPipe() {
     Pipe newP;
@@ -63,9 +66,7 @@ CS NewCs() {
     cout << "\nEnter the number of workshops\n";
     TryInputInt(newCs.Workshop);
     cout << "\nEnter the number of working workshops\n";
-    while (TryInputInt(newCs.WorkingWorkshop) > newCs.Workshop) {
-        cout << "\nError. Try again\n";
-    }
+    CheckMinMax(newCs.Workshop, newCs.WorkingWorkshop);
     cout << "\n Enter CS efficiency\n";
     TryInputFloat(newCs.Efficiency);
     cout << "\nCs added\n";
@@ -104,10 +105,7 @@ void EditPipe(Pipe & p) {
 void EditCs(CS& cs) {
     if (cs.WorkingWorkshop != -1) {
         cout << "\nEnter the number of working workshops\n";
-        while (TryInputInt(cs.WorkingWorkshop) > cs.Workshop) {
-            cout << "\nError. Try again\n";
-        }
-
+        CheckMinMax(cs.Workshop, cs.WorkingWorkshop);
     }
     else {
         cout << "\n The CS has not been added\n";
