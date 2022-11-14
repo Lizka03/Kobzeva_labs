@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-
+#include <vector>
 using namespace std;
 struct Pipe {
     float Lenght = 0, Diameter = 0;
@@ -12,66 +12,62 @@ struct CS {
     int  Workshop = 0, WorkingWorkshop = -1;
     float Efficiency = 0;
 };
-void TryInputInt(int &input) {
-    while (!((cin >> input).good()) || (input < 0) ) {
+template <typename T>
+T TryInputNumber(T min,T max) {
+    T x;
+    while (!((cin >> x).good()) || (x <min) ||(x>max) ) {
         cout << "\nError. Try again\n";
         cin.clear();
-        cin.ignore(INT_MAX, '\n');
+        cin.ignore(10000, '\n');
     }
+    return x;
 }
 
-void TryInputFloat(float &input) {
-    while (!((cin >> input).good()) || (input <= 0)) {
-        cout << "\nError. Try again\n";
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-    }
-}
-void TryInputStatus(int& status) {
-    do {
-        TryInputInt(status);
-        if (status == 1) {
-            cout << "Pipe is working";
-        }
-        else if (status == 2) {
-            cout << "Pipe is being repaired";
-        }
-        else {
-            cout << "\nError. Try again\n";
-        }
-    } while ((status < 1) || (status > 2));
-}
-
-void CheckMinMax(int max, int & x) {
-    while ((!((cin >> x).good()) || (x < 0)) || x > max) {
-        cout << "\nError. Try again\n";
-    }
-}
-Pipe NewPipe() {
-    Pipe newP;
+istream& operator >> (istream& in, Pipe& p) {
     cout << "\nEnter pipe length:\n";
-    TryInputFloat(newP.Lenght);
+    p.Lenght=TryInputNumber(0.0,DBL_MAX);
     cout << "\nEnter pipe diameter:\n";
-    TryInputFloat(newP.Diameter);
+    p.Diameter = TryInputNumber(0.0,DBL_MAX);
     cout << "\nEnter 1 if the pipe is working \n Enter 2 if the pipe is being repaired:\n";
-    TryInputStatus(newP.Status);
+    p.Status = TryInputNumber(1,2);
     cout << "\nPipe added\n";
-    return newP;
+    return in;
+}
+istream& operator >> (istream& in, CS& cs) {
+    cout << "\nEnter the name of CS\n";
+    getline(cin >> ws, cs.Name);
+    cout << "\nEnter the number of workshops\n";
+    cs.Workshop = TryInputNumber(0,INT_MAX);
+    cout << "\nEnter the number of working workshops\n";
+    cs.WorkingWorkshop = TryInputNumber(0, cs.Workshop);
+    cout << "\n Enter CS efficiency\n";
+    cs.Efficiency = TryInputNumber(0.0,DBL_MAX);
+    cout << "\nCs added\n";
+    return in;
+}
+ostream& operator << (ostream& out, const Pipe& p) {
+    if (p.Lenght != 0) {
+        out << "\n Pipe\n" << " Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter;
+        if (p.Status == 1)
+            out << "\n Status:  Pipe is working\n";
+        else
+            out << "\n Status: Pipe being repaired\n";
+    }
+    else {
+        out << "\n The pipe has not been added\n";
+    }
+    return out;
+}
+ostream& operator << (ostream& out, const CS& cs) {
+    if (cs.WorkingWorkshop != -1) {
+        out << "\n CS\n" << " Name:  " << cs.Name << "\n Number of workshops:  " << cs.Workshop << "\n Number of working workshops:  " << cs.WorkingWorkshop << "\n Efficiency:  " << cs.Efficiency;
+    }
+    else {
+        out << "\n The CS has not been added\n";
+    }
+    return out;
 }
 
-CS NewCs() {
-    CS newCs;
-    cout << "\nEnter the name of CS\n";
-    cin >> newCs.Name;
-    cout << "\nEnter the number of workshops\n";
-    TryInputInt(newCs.Workshop);
-    cout << "\nEnter the number of working workshops\n";
-    CheckMinMax(newCs.Workshop, newCs.WorkingWorkshop);
-    cout << "\n Enter CS efficiency\n";
-    TryInputFloat(newCs.Efficiency);
-    cout << "\nCs added\n";
-    return newCs;
-}
 void ShowPipe(const Pipe p) {
     if (p.Lenght != 0 ) {
         cout << "\n Pipe\n" << " Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter;
@@ -95,7 +91,7 @@ void ShowCs(const CS cs) {
 void EditPipe(Pipe & p) {
     cout << "\nEnter 1 if the pipe is working \n Enter 2 if the pipe is being repaired:\n";
     if (p.Status != 0) {
-        TryInputStatus(p.Status);
+        TryInputNumber(1,2);
         cout << "\nPipe edited\n";
     }
     else {
@@ -105,7 +101,7 @@ void EditPipe(Pipe & p) {
 void EditCs(CS& cs) {
     if (cs.WorkingWorkshop != -1) {
         cout << "\nEnter the number of working workshops\n";
-        CheckMinMax(cs.Workshop, cs.WorkingWorkshop);
+        TryInputNumber(0,cs.Workshop);
     }
     else {
         cout << "\n The CS has not been added\n";
@@ -137,22 +133,20 @@ void LoadData(Pipe& p, CS& cs) {
 int main() { 
     CS cs;
     Pipe p;
-    int choice = -1;
-    while (choice) {
+    while (1) {
         cout << "\n    Menu\n 1. Add pipe\n 2. Add CS\n 3. View all objects\n 4. Edit pipe\n 5. Edit CS\n 6. Save\n 7. Load\n 0. Exit\n";
-        TryInputInt(choice);
-        switch (choice) {
+        switch (TryInputNumber(0,7)) {
         case 0:
             break;
         case 1:
-            p = NewPipe();
+            cin >> p;
             break;
         case 2:
-            cs = NewCs();
+            cin >> cs;
             break;
         case 3:
-            ShowPipe(p);
-            ShowCs(cs);
+            cout << cs;
+            cout << p;
             break;
         case 4:
             EditPipe(p);
@@ -165,9 +159,7 @@ int main() {
             break;
         case 7:
             LoadData(p, cs);
-            break;
-        default:
-            cout << "\nError. Try again\n";
+            break;  
         }
     }
 }
