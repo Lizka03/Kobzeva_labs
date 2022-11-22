@@ -4,45 +4,58 @@
 #include <fstream>
 #include "utils.h"
 
-std::istream& operator >> (std::istream& in, CS& cs) {
-    std::cout << "\nEnter the name of CS\n";
-    std::getline(std::cin, cs.Name);
-    std::cout << "\nEnter the number of workshops\n";
+using namespace std;
+
+int CS::MaxIdCs = 1;
+istream& operator >> (istream& in, CS& cs) {
+    cout << "\nEnter the name of CS\n";
+    cin.clear();
+    cin.ignore(10000, '\n');
+    getline(cin, cs.Name);
+    cout << "\nEnter the number of workshops\n";
     cs.Workshop = CheckInputNumber(0, INT_MAX);
-    std::cout << "\nEnter the number of working workshops\n";
+    cout << "\nEnter the number of working workshops\n";
     cs.WorkingWorkshop = CheckInputNumber(0, cs.Workshop);
-    std::cout << "\n Enter CS efficiency\n";
+    cout << "\n Enter CS efficiency\n";
     cs.Efficiency = CheckInputNumber(0.0, 100.0);
-    std::cout << "\nCs added\n";
+    cout << "\nCs added\n";
     return in;
 }
-std::ostream& operator << (std::ostream& out, const CS& cs) {
-    if (cs.WorkingWorkshop != -1) out << "\n CS\n" << " Name:  " << cs.Name << "\n Number of workshops:  " << cs.Workshop << "\n Number of working workshops:  " << cs.WorkingWorkshop << "\n Efficiency:  " << cs.Efficiency;
+ostream& operator << (ostream& out, const CS& cs) {
+    if (cs.WorkingWorkshop != -1) out << "\n CS\n" << " Id:  " << cs.IdCs << "\n Name:  " << cs.Name << "\n Number of workshops:  " << cs.Workshop << "\n Number of working workshops:  " << cs.WorkingWorkshop << "\n Efficiency:  " << cs.Efficiency;
     else out << "\n The CS has not been added\n";
     return out;
 }
 
-void CS::ShowCs() const
+CS::CS()
 {
-    if (WorkingWorkshop != -1) std::cout << "\n CS\n" << " Name:  " << Name << "\n Number of workshops:  " << Workshop << "\n Number of working workshops:  " << WorkingWorkshop << "\n Efficiency:  " << Efficiency;
-    else std::cout << "\n The CS has not been added\n";
+    IdCs = MaxIdCs++;
+}
+
+int CS::GetId()
+{
+    return IdCs;
+}
+
+string CS::GetName()
+{
+    return string Name;
 }
 
 void CS::EditCs()
 {
-    if (WorkingWorkshop != -1) {
-        std::cout << "\nEnter the number of working workshops\n";
-        CheckInputNumber(0, Workshop);
-    }
-    else std::cout << "\n The CS has not been added\n";
+    cout << "\nWorkshops: \n" << Workshop << endl;
+    cout << "\nWorking workshop: \n" << WorkingWorkshop;
+    cout << "\nEnter new number of working workshops\n" << endl;
+    WorkingWorkshop = CheckInputNumber(-1, Workshop);
 }
 
-void CS::SaveCs(std::ofstream& file)
+void CS::SaveCs(ofstream& fout)
 {
-    file << Name << std::endl << Workshop << std::endl << WorkingWorkshop << std::endl << Efficiency << std::endl;
+    fout <<IdCs << endl << Name << endl << Workshop << endl << WorkingWorkshop << endl << Efficiency << endl;
 }
 
-void CS::LoadCs(std::ifstream& file)
+void CS::LoadCs(ifstream& fin)
 {
-    file >> Name >> Workshop >> WorkingWorkshop >> Efficiency;
+    fin >>IdCs>> Name >> Workshop >> WorkingWorkshop >> Efficiency;
 }
