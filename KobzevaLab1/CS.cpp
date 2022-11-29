@@ -37,9 +37,14 @@ int CS::GetId()
     return IdCs;
 }
 
+double CS::GetNotWorkingCs()
+{
+    return ((((double)Workshop - (double)WorkingWorkshop)/ (double)Workshop)*100);
+}
+
 string CS::GetName()
 {
-    return string Name;
+    return Name;
 }
 
 void CS::EditCs()

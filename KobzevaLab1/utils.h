@@ -36,7 +36,7 @@ unordered_set <int> SearchCsByParametr(unordered_map <int, CS>& CsGroup, FilterC
     unordered_set<int> Id;
     for (auto& cs : CsGroup) {
         if (f(cs.second, par))
-            id.insert(cs.second.GetId());
+            Id.insert(cs.second.GetId());
     }
     return Id;
 }

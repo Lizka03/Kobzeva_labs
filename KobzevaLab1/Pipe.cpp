@@ -11,6 +11,10 @@ int Pipe::GetId()
 {
     return IdPipe;
 }
+int Pipe::GetStatus()
+{
+    return Status;
+}
 
 
 Pipe::Pipe()
@@ -52,7 +56,7 @@ istream& operator >> (istream& in, Pipe& p) {
 }
 ostream& operator << (ostream& out, const Pipe& p) {
     if (p.Lenght != 0) {
-        out << "\n Pipe\n" <<" Index: "<< p.IdPipe <<"\n Name: " << p.Name << "\n Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter;
+        out << "\n Pipe\n" <<" Id: "<< p.IdPipe <<"\n Name: " << p.Name << "\n Length:  " << p.Lenght << "\n Diametr:  " << p.Diameter;
         if (p.Status == 1) out << "\n Status:  Pipe is working\n";
         else out << "\n Status: Pipe being repaired\n";
     }
