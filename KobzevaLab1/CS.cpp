@@ -2,10 +2,11 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "graf.h"
 #include "utils.h"
 
 using namespace std;
-
+System t;
 int CS::MaxIdCs = 1;
 istream& operator >> (istream& in, CS& cs) {
     cout << "\nEnter the name of CS\n";

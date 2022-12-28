@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <unordered_set>
 class CS
 {
     std::string Name = "";
@@ -12,6 +13,7 @@ public:
     friend std::istream& operator >> (std::istream& in, CS& cs);
     friend std::ostream& operator << (std::ostream& out, const CS& cs);
     int GetId();
+    int getwork() { return Workshop; };
     double GetNotWorkingCs();
     std::string GetName();
     void EditCs();

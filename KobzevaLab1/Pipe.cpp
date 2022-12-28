@@ -5,15 +5,11 @@
 #include "utils.h"
 
 using namespace std;
-
+System s;
 int Pipe::MaxIdPipe = 1;
 int Pipe::GetId()
 {
     return IdPipe;
-}
-int Pipe::GetStatus()
-{
-    return Status;
 }
 
 
@@ -42,6 +38,7 @@ void Pipe::CheckStatus(int status)
 }
 istream& operator >> (istream& in, Pipe& p) {
     cout << "\nEnter pipe name :\n";
+    s.pipe.insert(p.IdPipe);
     cin.clear();
     cin.ignore(10000, '\n');
     getline(in, p.Name);

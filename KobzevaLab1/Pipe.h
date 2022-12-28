@@ -4,12 +4,13 @@
 class Pipe
 {
 	float Lenght=0, Diameter=0;
-	int IdPipe = -1, Status = 0;
+	int IdPipe = -1;
 
 public:
 	int GetId();
-	int GetStatus();
+	double GetD() { return Diameter; }
 	static int MaxIdPipe;
+	int Status = 0;
 	Pipe();
 	std::string Name = "";
 	friend std::istream& operator >> (std::istream& in, Pipe& p);

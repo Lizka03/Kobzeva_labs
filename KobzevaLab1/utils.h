@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Pipe.h"
 #include "CS.h"
+#include "graf.h"
 using namespace std;
 template <typename T>
 T CheckInputNumber(T min, T max) {
@@ -17,13 +18,21 @@ T CheckInputNumber(T min, T max) {
     }
     return x;
 }
-
 template <typename T>
-using FilterPipe = bool (*) (Pipe& p, T par);
+ostream& operator<< (ostream& out, unordered_map <int, T>& p) {
+    out << "Exiting id: ";
+    for (auto& [i, obj] : p) {
+        out << i << " ";
+    }
+    out << endl;
+    return out;
+}
 template <typename T>
-using FilterCs = bool(*) (CS& cs, T par);
+using FilterPipe = bool (*) (Pipe p, T par);
 template <typename T>
-unordered_set<int> SearchPipeByParametr(unordered_map <int, Pipe>& PGroup, FilterPipe<T> f, T par) {
+using FilterCs = bool(*) (CS cs, T par);
+template <typename T>
+unordered_set<int> SearchPipeByParametr(unordered_map <int, Pipe> PGroup, FilterPipe<T> f, T par) {
     unordered_set <int> Id;
     for (auto& p : PGroup) {
         if (f(p.second, par))
@@ -32,7 +41,7 @@ unordered_set<int> SearchPipeByParametr(unordered_map <int, Pipe>& PGroup, Filte
     return Id;
 }
 template <typename T>
-unordered_set <int> SearchCsByParametr(unordered_map <int, CS>& CsGroup, FilterCs<T> f, T par) {
+unordered_set <int> SearchCsByParametr(unordered_map <int, CS> CsGroup, FilterCs<T> f, T par) {
     unordered_set<int> Id;
     for (auto& cs : CsGroup) {
         if (f(cs.second, par))
